@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://77l5kf4owvtw"]
+
+[ext_resource type="Script" uid="uid://cw5puwuaeowd" path="res://Scripts/Game/world_border.gd" id="1_bhub6"]
+
+[node name="WorldBorder" type="StaticBody2D" unique_id=1048687757]
+script = ExtResource("1_bhub6")
