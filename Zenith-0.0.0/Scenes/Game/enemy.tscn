@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://2oqfqxx5b61g"]
+
+[ext_resource type="Script" uid="uid://c767kqehm52q6" path="res://Scripts/Game/enemy.gd" id="1_c4pr2"]
+
+[sub_resource type="GDScript" id="GDScript_7xaro"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5dthu"]
+radius = 16.0
+script = SubResource("GDScript_7xaro")
+
+[node name="Enemy" type="CharacterBody2D" unique_id=1293029670]
+script = ExtResource("1_c4pr2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=897207525]
+shape = SubResource("CircleShape2D_5dthu")
