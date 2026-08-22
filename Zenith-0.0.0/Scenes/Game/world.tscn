@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://ckavqb25bdaul"]
+
+[ext_resource type="Script" uid="uid://d2eq6fjf1i6us" path="res://Scripts/Game/world.gd" id="1_j8hn3"]
+[ext_resource type="Script" uid="uid://ba0fclvnh5jqr" path="res://Scripts/World/background.gd" id="2_xvcwp"]
+[ext_resource type="PackedScene" uid="uid://ckudr8chj1kgo" path="res://Scenes/Game/player.tscn" id="3_6y6xk"]
+[ext_resource type="PackedScene" uid="uid://dvewtmm6d837k" path="res://Scenes/UI/hud.tscn" id="4_fj5tn"]
+[ext_resource type="PackedScene" uid="uid://b5vd3mim2637n" path="res://Scenes/UI/upgrade_menu.tscn" id="5_g86rf"]
+[ext_resource type="PackedScene" uid="uid://00l5jc7ri33a" path="res://Scenes/UI/game_over.tscn" id="6_0e11a"]
+[ext_resource type="Script" uid="uid://bji6d88ru7gkl" path="res://Scripts/World/moon_phase_manager.gd" id="7_oqugm"]
+[ext_resource type="PackedScene" uid="uid://c201kqm66rjry" path="res://Scenes/UI/pause_menu.tscn" id="8_5ori0"]
+[ext_resource type="PackedScene" uid="uid://77l5kf4owvtw" path="res://Scenes/Game/world_border.tscn" id="9_xvcwp"]
+
+[node name="World" type="Node2D" unique_id=2012631685]
+script = ExtResource("1_j8hn3")
+
+[node name="Background" type="Node2D" parent="." unique_id=1399810713]
+script = ExtResource("2_xvcwp")
+
+[node name="Player" parent="." unique_id=1038469765 instance=ExtResource("3_6y6xk")]
+
+[node name="HUD" parent="." unique_id=636354839 instance=ExtResource("4_fj5tn")]
+
+[node name="UpgradeMenu" parent="." unique_id=1447626849 instance=ExtResource("5_g86rf")]
+
+[node name="GameOver" parent="." unique_id=1686501661 instance=ExtResource("6_0e11a")]
+
+[node name="MoonPhaseManager" type="Node" parent="." unique_id=2029700085]
+script = ExtResource("7_oqugm")
+
+[node name="PauseMenu" parent="." unique_id=1995346967 instance=ExtResource("8_5ori0")]
+
+[node name="WorldBorder" parent="." unique_id=1048687757 instance=ExtResource("9_xvcwp")]
