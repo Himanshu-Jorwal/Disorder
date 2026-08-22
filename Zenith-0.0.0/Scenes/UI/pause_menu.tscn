@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://c201kqm66rjry"]
+
+[ext_resource type="Script" uid="uid://6ttg2sy02n1s" path="res://Scripts/UI/pause_menu.gd" id="1_hdmo1"]
+
+[node name="PauseMenu" type="CanvasLayer" unique_id=1995346967]
+script = ExtResource("1_hdmo1")
+
+[node name="Panel" type="Panel" parent="." unique_id=491422317]
+offset_right = 400.0
+offset_bottom = 250.0
+
+[node name="Title" type="Label" parent="Panel" unique_id=67793482]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Paused"
+
+[node name="ResumeButton" type="Button" parent="Panel" unique_id=1919178879]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Resume"
+
+[node name="QuitButton" type="Button" parent="Panel" unique_id=1153973212]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Give Up"

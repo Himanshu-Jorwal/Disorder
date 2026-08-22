@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://b5vd3mim2637n"]
+
+[ext_resource type="Script" uid="uid://ba7jof5upwtev" path="res://Scripts/UI/upgrade_menu.gd" id="1_qvtwy"]
+
+[node name="UpgradeMenu" type="CanvasLayer" unique_id=1447626849]
+script = ExtResource("1_qvtwy")
+
+[node name="Panel" type="Panel" parent="." unique_id=2141606029]
+offset_left = 376.0
+offset_top = 174.0
+offset_right = 776.0
+offset_bottom = 474.0
+
+[node name="Title" type="Label" parent="Panel" unique_id=1927487920]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 20.0
+offset_right = 140.0
+offset_bottom = 43.0
+text = "Choose an Upgrade"
+
+[node name="Option1" type="Button" parent="Panel" unique_id=1666698075]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 80.0
+offset_right = 350.0
+offset_bottom = 130.0
+
+[node name="Option2" type="Button" parent="Panel" unique_id=384737475]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 150.0
+offset_right = 350.0
+offset_bottom = 200.0
+
+[node name="Option3" type="Button" parent="Panel" unique_id=326108597]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 220.0
+offset_right = 350.0
+offset_bottom = 270.0
