@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://ckudr8chj1kgo"]
+
+[ext_resource type="Script" uid="uid://dgemna2cprj7k" path="res://Scripts/Game/player.gd" id="1_4flbx"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sh265"]
+radius = 16.0
+
+[node name="Player" type="CharacterBody2D" unique_id=1038469765]
+position = Vector2(98, 45)
+script = ExtResource("1_4flbx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1244339516]
+shape = SubResource("CircleShape2D_sh265")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1722615643]
