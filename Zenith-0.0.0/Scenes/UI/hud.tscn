@@ -2,21 +2,10 @@
 
 [ext_resource type="Script" uid="uid://d3xgmdujcke3m" path="res://Scripts/UI/hud.gd" id="1_37p78"]
 [ext_resource type="Script" uid="uid://dagka8jvjl6xu" path="res://Scripts/World/moon.gd" id="2_64ctp"]
+[ext_resource type="Script" uid="uid://dlvehthje1k3p" path="res://Scenes/UI/hud_draw.gd" id="3_fdl0h"]
 
 [node name="HUD" type="CanvasLayer" unique_id=636354839]
 script = ExtResource("1_37p78")
-
-[node name="HPLabel" type="Label" parent="." unique_id=1819514853]
-offset_left = 20.0
-offset_top = 20.0
-offset_right = 60.0
-offset_bottom = 43.0
-
-[node name="XPLabel" type="Label" parent="." unique_id=1774609860]
-offset_left = 20.0
-offset_top = 50.0
-offset_right = 60.0
-offset_bottom = 73.0
 
 [node name="LevelLabel" type="Label" parent="." unique_id=414308473]
 offset_left = 20.0
@@ -26,3 +15,6 @@ offset_bottom = 103.0
 
 [node name="Moon" type="Node2D" parent="." unique_id=1992964406]
 script = ExtResource("2_64ctp")
+
+[node name="HUDDraw" type="Node2D" parent="." unique_id=1641441771]
+script = ExtResource("3_fdl0h")

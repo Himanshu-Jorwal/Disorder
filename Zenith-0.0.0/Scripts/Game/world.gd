@@ -41,7 +41,7 @@ func _process(delta):
 		spawn_enemy()
 		spawn_timer = 0.0
 
-	hud.update(player.hp, player.xp, player.xp_to_next_level, player.level)
+	hud.update(player.hp, player.max_hp, player.xp, player.xp_to_next_level, player.level)
 
 func spawn_enemy():
 	var enemy = ENEMY_SCENE.instantiate()

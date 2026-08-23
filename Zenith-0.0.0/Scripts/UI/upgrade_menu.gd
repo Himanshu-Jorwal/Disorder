@@ -63,4 +63,5 @@ func apply_upgrade(upgrade):
 		"speed":
 			player.speed_multiplier += upgrade.value
 		"hp":
+			player.max_hp += upgrade.value
 			player.hp += upgrade.value

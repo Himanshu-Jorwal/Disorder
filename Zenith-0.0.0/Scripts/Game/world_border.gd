@@ -96,24 +96,26 @@ func _process(delta):
 	queue_redraw()
 
 func _get_heat_colors(prox):
-	if prox > 0.6:
+	if prox > 0.8:
 		return [
-			Color(0.4, 0.1, 0.6, 0.12),   # outermost glow
-			Color(0.5, 0.1, 0.8, 0.25),   # mid glow
-			Color(0.55, 0.1, 0.85, 0.85), # core
-			Color(1.0, 1.0, 1.0, 0.45)    # white center
+			Color(0.4, 0.1, 0.6, 0.12),
+			Color(0.5, 0.1, 0.8, 0.25),
+			Color(0.55, 0.1, 0.85, 0.85),
+			Color(1.0, 1.0, 1.0, 0.45)
 		]
 	else:
-		var heat = 1.0 - prox / 0.6
+		var heat = 1.0 - (prox / 0.8)
+		# heat 1.0 = very close = brightest
+		# heat 0.0 = edge of threshold = barely reacting dark red
 		return [
-			# Outer — deep red glow
-			Color(0.8, 0.0, 0.0, 0.15 + heat * 0.1),
-			# Mid — red to orange
-			Color(1.0, 0.08 + heat * 0.15, 0.0, 0.35 + heat * 0.2),
-			# Core — orange to yellow
-			Color(1.0, 0.35 + heat * 0.35, 0.0, 0.9),
-			# Center — yellow to white
-			Color(1.0, 0.7 + heat * 0.3, heat * 0.6, 0.9 + heat * 0.1)
+			# Outer glow — bright wide glow when close
+			Color(0.8, heat * 0.1, 0.0, 0.08 + heat * 0.2),
+			# Mid — dark red far, bright orange close
+			Color(0.7 + heat * 0.2, heat * 0.3, 0.0, 0.25 + heat * 0.35),
+			# Core — dark red far, bright yellow/orange close
+			Color(0.8 + heat * 0.15, heat * 0.55, heat * 0.1, 0.7 + heat * 0.25),
+			# Center — invisible far, bright white close
+			Color(1.0, 0.6 + heat * 0.4, heat * 0.5, heat * 0.95)
 		]
 
 func _draw():
