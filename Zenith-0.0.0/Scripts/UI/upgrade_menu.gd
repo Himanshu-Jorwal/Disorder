@@ -9,7 +9,7 @@ var upgrades = [
 	{"name": "Damage +25%", "type": "damage", "value": 0.25},
 	{"name": "Fire Rate +25%", "type": "fire_rate", "value": 0.25},
 	{"name": "Move Speed +20%", "type": "speed", "value": 0.20},
-	{"name": "Max HP +2", "type": "hp", "value": 2},
+	{"name": "Max HP +20", "type": "hp", "value": 20},
 ]
 
 var player = null

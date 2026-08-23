@@ -7,6 +7,9 @@ var spawn_interval = 2.0
 var spawn_radius = 500.0
 
 var spawn_timer = 0.0
+var scale_timer = 0.0
+var difficulty = 1.0
+
 var player = null
 var hud = null
 var moon = null
@@ -25,9 +28,19 @@ func _ready():
 
 func _process(delta):
 	spawn_timer += delta
+	scale_timer += delta
+
+	# Scale difficulty every 30 seconds
+	if scale_timer >= 30.0:
+		scale_timer = 0.0
+		difficulty += 0.15
+		base_spawn_interval = max(0.4, base_spawn_interval - 0.1)
+		print("Difficulty: ", difficulty)
+
 	if spawn_timer >= spawn_interval:
 		spawn_enemy()
 		spawn_timer = 0.0
+
 	hud.update(player.hp, player.xp, player.xp_to_next_level, player.level)
 
 func spawn_enemy():
@@ -39,6 +52,7 @@ func spawn_enemy():
 	enemy.position = spawn_pos
 	enemy.player = player
 	enemy.apply_phase(current_phase)
+	enemy.apply_difficulty(difficulty)
 	add_child(enemy)
 
 func _on_phase_changed(phase):

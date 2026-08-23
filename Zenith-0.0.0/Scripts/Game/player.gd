@@ -2,7 +2,9 @@ extends CharacterBody2D
 
 const BASE_SPEED = 200.0
 const BASE_FIRE_RATE = 0.2
-const BASE_DAMAGE = 1
+const BASE_DAMAGE = 10
+const INVINCIBILITY_DURATION = 1.0
+const FLASH_RATE = 0.1
 
 var speed_multiplier = 1.0
 var fire_rate_multiplier = 1.0
@@ -10,7 +12,8 @@ var damage_multiplier = 1.0
 
 var time_since_last_shot = 0.0
 var bullet_scene = preload("res://Scenes/Game/bullet.tscn")
-var hp = 5
+var hp = 100
+var max_hp = 100
 var xp = 0
 var level = 1
 var xp_to_next_level = 50
@@ -18,16 +21,18 @@ var score = 0
 var time_alive = 0.0
 
 var upgrade_menu = null
+var is_invincible = false
+var invincibility_timer = 0.0
+var flash_timer = 0.0
+var is_visible = true
 
 func _draw():
-	# Outer glow layers
-	draw_circle(Vector2.ZERO, 28, Color(1, 1, 1, 0.03))
-	draw_circle(Vector2.ZERO, 24, Color(1, 1, 1, 0.06))
-	draw_circle(Vector2.ZERO, 20, Color(1, 1, 1, 0.1))
-	# Core
-	draw_circle(Vector2.ZERO, 16, Color(1, 1, 1, 1.0))
-	# Inner bright spot
-	draw_circle(Vector2.ZERO, 8, Color(1, 1, 1, 1.0))
+	if is_visible:
+		draw_circle(Vector2.ZERO, 28, Color(1, 1, 1, 0.03))
+		draw_circle(Vector2.ZERO, 24, Color(1, 1, 1, 0.06))
+		draw_circle(Vector2.ZERO, 20, Color(1, 1, 1, 0.1))
+		draw_circle(Vector2.ZERO, 16, Color(1, 1, 1, 1.0))
+		draw_circle(Vector2.ZERO, 8, Color(1, 1, 1, 1.0))
 
 func _ready():
 	add_to_group("player")
@@ -35,6 +40,18 @@ func _ready():
 func _physics_process(delta):
 	time_alive += delta
 	score = int(time_alive * 10) + (level * 100)
+
+	if is_invincible:
+		invincibility_timer -= delta
+		flash_timer -= delta
+		if flash_timer <= 0.0:
+			is_visible = !is_visible
+			flash_timer = FLASH_RATE
+			queue_redraw()
+		if invincibility_timer <= 0.0:
+			is_invincible = false
+			is_visible = true
+			queue_redraw()
 
 	var direction = Vector2.ZERO
 	if Input.is_key_pressed(KEY_D): direction.x += 1
@@ -60,7 +77,12 @@ func shoot():
 	bullet.setup(global_position, dir, dmg)
 
 func take_damage(amount):
+	if is_invincible:
+		return
 	hp -= amount
+	is_invincible = true
+	invincibility_timer = INVINCIBILITY_DURATION
+	flash_timer = FLASH_RATE
 	if hp <= 0:
 		die()
 

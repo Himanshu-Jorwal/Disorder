@@ -8,3 +8,7 @@ export/
 # OS
 .DS_Store
 Thumbs.db
+Backup/
+Tools/
+Idea.txt
+Stuff.txt
