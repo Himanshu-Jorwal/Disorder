@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b2xk2mobm8r4x"]
+
+[ext_resource type="Script" uid="uid://vvfrt56jwi17" path="res://Scripts/Game/beam.gd" id="1_mgkox"]
+
+[node name="Beam" type="Node2D" unique_id=195105902]
+script = ExtResource("1_mgkox")
