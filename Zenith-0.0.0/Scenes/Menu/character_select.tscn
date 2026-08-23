@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dhpyk8tpmxrm8"]
+
+[ext_resource type="Script" uid="uid://ooemxms73hbj" path="res://Scripts/Menu/character_select.gd" id="1_be6ap"]
+[ext_resource type="Script" uid="uid://dx3h4lvl2o6ye" path="res://Scripts/Menu/select_draw.gd" id="2_ncg5q"]
+
+[node name="CharacterSelect" type="CanvasLayer" unique_id=1044671754]
+script = ExtResource("1_be6ap")
+
+[node name="SelectDraw" type="Node2D" parent="." unique_id=759504293]
+script = ExtResource("2_ncg5q")
