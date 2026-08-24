@@ -9,6 +9,7 @@ radius = 16.0
 script = SubResource("GDScript_7xaro")
 
 [node name="Enemy" type="CharacterBody2D" unique_id=1293029670]
+collision_layer = 2
 script = ExtResource("1_c4pr2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=897207525]

@@ -17,6 +17,7 @@ script = ExtResource("1_j8hn3")
 script = ExtResource("2_xvcwp")
 
 [node name="Player" parent="." unique_id=1038469765 instance=ExtResource("3_6y6xk")]
+collision_layer = 2
 
 [node name="HUD" parent="." unique_id=636354839 instance=ExtResource("4_fj5tn")]
 

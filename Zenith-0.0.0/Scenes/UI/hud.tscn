@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://d3xgmdujcke3m" path="res://Scripts/UI/hud.gd" id="1_37p78"]
 [ext_resource type="Script" uid="uid://dagka8jvjl6xu" path="res://Scripts/World/moon.gd" id="2_64ctp"]
-[ext_resource type="Script" uid="uid://dlvehthje1k3p" path="res://Scenes/UI/hud_draw.gd" id="3_fdl0h"]
+[ext_resource type="Script" uid="uid://dlvehthje1k3p" path="res://Scripts/UI/hud_draw.gd" id="3_fdl0h"]
 
 [node name="HUD" type="CanvasLayer" unique_id=636354839]
 script = ExtResource("1_37p78")

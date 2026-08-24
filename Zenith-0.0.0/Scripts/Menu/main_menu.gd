@@ -21,7 +21,7 @@ func _ready():
 	exit_button.pressed.connect(_on_exit)
 
 func _on_start():
-	get_tree().change_scene_to_file("res://Scenes/Game/world.tscn")
+	get_tree().change_scene_to_file("res://Scenes/Menu/character_select.tscn")
 
 func _on_exit():
 	get_tree().quit()
