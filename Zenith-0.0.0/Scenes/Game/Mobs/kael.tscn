@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://cbhw6ljhgw2bf"]
+
+[ext_resource type="Script" uid="uid://hjjf7blshlph" path="res://Scripts/Game/Mobs/kael.gd" id="1_2nsrj"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5dthu"]
+radius = 16.0
+
+[node name="Kael" type="CharacterBody2D" unique_id=1637168823]
+script = ExtResource("1_2nsrj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1509258034]
+shape = SubResource("CircleShape2D_5dthu")
