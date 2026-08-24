@@ -1,6 +1,10 @@
 extends Node2D
 
-const ENEMY_SCENE = preload("res://Scenes/Game/enemy.tscn")
+const WREN_SCENE = preload("res://Scenes/Game/Mobs/wren.tscn")
+const FEIND_SCENE = preload("res://Scenes/Game/Mobs/feind.tscn")
+const MORI_SCENE = preload("res://Scenes/Game/Mobs/mori.tscn")
+const LARK_SCENE = preload("res://Scenes/Game/Mobs/lark.tscn")
+const KAEL_SCENE = preload("res://Scenes/Game/Mobs/kael.tscn")
 
 var base_spawn_interval = 2.0
 var spawn_interval = 2.0
@@ -49,7 +53,19 @@ func _process(delta):
 	)
 
 func spawn_enemy():
-	var enemy = ENEMY_SCENE.instantiate()
+	var roll = randf()
+	var enemy
+	if roll < 0.45:
+		enemy = WREN_SCENE.instantiate()
+	elif roll < 0.63:
+		enemy = FEIND_SCENE.instantiate()
+	elif roll < 0.77:
+		enemy = MORI_SCENE.instantiate()
+	elif roll < 0.98:
+		enemy = LARK_SCENE.instantiate()
+	else:
+		enemy = KAEL_SCENE.instantiate()
+
 	var angle = randf() * TAU
 	var spawn_pos = player.global_position + Vector2(cos(angle), sin(angle)) * spawn_radius
 	spawn_pos.x = clamp(spawn_pos.x, -1450, 1450)
