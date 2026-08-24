@@ -21,6 +21,7 @@ var is_invincible = false
 var invincibility_timer = 0.0
 var flash_timer = 0.0
 var is_visible = true
+var camera = null
 
 var character_name = "Zaire"
 var character_color = Color(0.6, 0.3, 1.0)
@@ -33,7 +34,7 @@ var attack2_cooldown = 0.0
 var absolute_cooldown = 0.0
 const ATTACK1_MAX_COOLDOWN = 0.25
 const ATTACK2_MAX_COOLDOWN = 1.0
-const ABSOLUTE_MAX_COOLDOWN = 30.0
+const ABSOLUTE_MAX_COOLDOWN = 10.0
 
 func _draw():
 	if is_visible:
@@ -51,6 +52,7 @@ func _ready():
 	attack1_name = data.attack1
 	attack2_name = data.attack2
 	absolute_name = data.absolute
+	camera = $Camera2D
 
 func _physics_process(delta):
 	time_alive += delta
@@ -93,6 +95,15 @@ func _physics_process(delta):
 		use_absolute()
 		absolute_cooldown = ABSOLUTE_MAX_COOLDOWN
 
+func trigger_shake(amount, duration):
+	if camera:
+		var tween = create_tween()
+		for i in range(10):
+			tween.tween_property(camera, "offset",
+				Vector2(randf_range(-amount, amount), randf_range(-amount, amount)),
+				duration / 10.0)
+		tween.tween_property(camera, "offset", Vector2.ZERO, 0.05)
+
 func use_attack1():
 	match character_name:
 		"Zaire": _zaire_crossbow()
@@ -115,7 +126,6 @@ func use_absolute():
 func _zaire_crossbow():
 	var mouse_pos = get_global_mouse_position()
 	var base_dir = (mouse_pos - global_position).normalized()
-	# 3 bolts, tighter spread, star shaped visually
 	var spread_angles = [-12.0, 0.0, 12.0]
 	for angle in spread_angles:
 		var dir = base_dir.rotated(deg_to_rad(angle))
@@ -127,7 +137,6 @@ func _zaire_lance():
 	_spawn_piercing_bullet(global_position, dir, 35, Color(0.9, 0.6, 1.0))
 
 func _zaire_absolute():
-	# Nova burst — 24 star bolts in all directions
 	for i in range(24):
 		var angle = TAU * i / 24
 		var dir = Vector2(cos(angle), sin(angle))
@@ -137,7 +146,6 @@ func _zaire_absolute():
 func _daggers_shard():
 	var mouse_pos = get_global_mouse_position()
 	var dir = (mouse_pos - global_position).normalized()
-	# Fire 2 shards slightly offset for visual interest
 	var perp = dir.rotated(PI / 2)
 	_spawn_shard_bullet(global_position + perp * 5, dir, 15, Color(0.2, 0.9, 0.8))
 	_spawn_shard_bullet(global_position - perp * 5, dir, 15, Color(0.2, 0.9, 0.8))
@@ -145,14 +153,12 @@ func _daggers_shard():
 func _daggers_mirror():
 	var mouse_pos = get_global_mouse_position()
 	var dir = (mouse_pos - global_position).normalized()
-	# 8 directions for more impactful feel
 	for i in range(8):
 		var angle = TAU * i / 8
 		var d = Vector2(cos(angle), sin(angle))
 		_spawn_shard_bullet(global_position, d, 18, Color(0.3, 1.0, 0.9))
 
 func _daggers_absolute():
-	# 16 returning shards
 	for i in range(16):
 		var angle = TAU * i / 16
 		var dir = Vector2(cos(angle), sin(angle))
@@ -162,7 +168,6 @@ func _daggers_absolute():
 func _milano_chime():
 	var mouse_pos = get_global_mouse_position()
 	var dir = (mouse_pos - global_position).normalized()
-	# Single slow heavy orb — hits very hard
 	_spawn_heavy_bullet(global_position, dir, 50, Color(1.0, 0.6, 0.1))
 
 func _milano_rift():
@@ -223,6 +228,7 @@ func take_damage(amount):
 	is_invincible = true
 	invincibility_timer = INVINCIBILITY_DURATION
 	flash_timer = FLASH_RATE
+	trigger_shake(16.0, 0.3)
 	if hp <= 0:
 		die()
 
