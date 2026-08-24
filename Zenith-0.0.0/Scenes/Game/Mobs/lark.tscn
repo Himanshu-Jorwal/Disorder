@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://pc6otjp21wes"]
+
+[ext_resource type="Script" uid="uid://c6dsuxyvg0p7y" path="res://Scripts/Game/Mobs/lark.gd" id="1_yj67l"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_com70"]
+radius = 16.0
+
+[node name="Lark" type="CharacterBody2D" unique_id=1513434564]
+script = ExtResource("1_yj67l")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=17963397]
+shape = SubResource("CircleShape2D_com70")
