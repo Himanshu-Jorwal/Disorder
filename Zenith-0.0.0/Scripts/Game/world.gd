@@ -30,18 +30,23 @@ func _process(delta):
 	spawn_timer += delta
 	scale_timer += delta
 
-	# Scale difficulty every 30 seconds
 	if scale_timer >= 30.0:
 		scale_timer = 0.0
 		difficulty += 0.15
 		base_spawn_interval = max(0.4, base_spawn_interval - 0.1)
-		print("Difficulty: ", difficulty)
 
 	if spawn_timer >= spawn_interval:
 		spawn_enemy()
 		spawn_timer = 0.0
 
-	hud.update(player.hp, player.max_hp, player.xp, player.xp_to_next_level, player.level)
+	hud.update(
+		player.hp, player.max_hp,
+		player.xp, player.xp_to_next_level, player.level,
+		player.attack1_cooldown, player.ATTACK1_MAX_COOLDOWN,
+		player.attack2_cooldown, player.ATTACK2_MAX_COOLDOWN,
+		player.absolute_cooldown, player.ABSOLUTE_MAX_COOLDOWN,
+		player.attack1_name, player.attack2_name, player.absolute_name
+	)
 
 func spawn_enemy():
 	var enemy = ENEMY_SCENE.instantiate()
