@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://dwyhvpii4eurv"]
+
+[ext_resource type="Script" uid="uid://cet8qwhaqbphx" path="res://Scripts/Game/Mobs/graven.gd" id="1_adqp3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5dthu"]
+radius = 64.0
+
+[node name="Graven" type="CharacterBody2D" unique_id=1877419414]
+script = ExtResource("1_adqp3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1369832155]
+shape = SubResource("CircleShape2D_5dthu")
