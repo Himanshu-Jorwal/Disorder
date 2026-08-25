@@ -12,8 +12,10 @@ var current_phase = 0
 var difficulty = 1.0
 var time = 0.0
 var grow_timer = 0.0
+var speed_override = -1.0
+var blob_timer = 0.0
+const BLOB_LIFETIME = 10.0
 
-# Size 0 = tiny blob fragment, 1 = default, 2 = large
 const SIZE_STATS = {
 	0: {"radius": 6.0,  "hp": 1,   "speed": 150.0, "bar_width": 12.0, "bar_y": -12.0, "grow_time": 0.0},
 	1: {"radius": 16.0, "hp": 60,  "speed": 85.0,  "bar_width": 32.0, "bar_y": -28.0, "grow_time": 25.0},
@@ -29,7 +31,6 @@ func _apply_size_stats():
 	max_hp = int(stats.hp * (1.0 + (difficulty - 1.0) * 0.3)) if difficulty > 1.0 else stats.hp
 	hp = max_hp
 	grow_timer = 0.0
-	# Update collision shape to match visual size
 	var shape = $CollisionShape2D.shape as CircleShape2D
 	if shape:
 		shape.radius = stats.radius
@@ -40,9 +41,13 @@ func _draw():
 	var col = Color(0.6, 0.1, 0.8)
 
 	if size_level == 0:
-		draw_circle(Vector2.ZERO, radius, col)
-		draw_circle(Vector2.ZERO, radius * 0.4, Color(1, 1, 1, 0.5))
-		return
+			# Normal appearance
+			draw_circle(Vector2.ZERO, radius, col)
+			draw_circle(Vector2.ZERO, radius * 0.4, Color(1, 1, 1, 0.5))
+			# Countdown arc — drains as timer progresses
+			var progress = 1.0 - (blob_timer / BLOB_LIFETIME)
+			draw_arc(Vector2.ZERO, radius + 4, -PI / 2, -PI / 2 + TAU * progress, 16, Color(0.8, 0.8, 1.0, 0.9), 2.0)
+			return
 
 	var points = PackedVector2Array()
 	var steps = 16
@@ -56,14 +61,12 @@ func _draw():
 	draw_colored_polygon(points, col)
 	draw_circle(Vector2.ZERO, radius * 0.35, Color(1, 1, 1, 0.3))
 
-	# Growth ring
 	if size_level == 1:
 		var grow_max = SIZE_STATS[1].grow_time
 		if grow_max > 0:
 			var grow_progress = grow_timer / grow_max
 			draw_arc(Vector2.ZERO, radius + 6, -PI / 2, -PI / 2 + TAU * grow_progress, 32, Color(1.0, 0.6, 0.0, 0.7), 2.5)
 
-	# HP bar
 	var bar_width = stats.bar_width
 	var bar_height = 4.0
 	var bar_y = stats.bar_y
@@ -76,14 +79,22 @@ func _physics_process(delta):
 	time += delta
 	queue_redraw()
 
+	# Blob fade and expire
+	if size_level == 0:
+		blob_timer += delta
+		if blob_timer >= BLOB_LIFETIME:
+			queue_free()
+			return
+
 	var grow_time = SIZE_STATS[size_level].grow_time
 	if size_level == 1 and grow_time > 0:
 		grow_timer += delta
 		if grow_timer >= grow_time:
 			_grow()
 
+	var current_speed = speed_override if speed_override > 0 else SIZE_STATS[size_level].speed
 	var direction = (player.global_position - global_position).normalized()
-	velocity = direction * SIZE_STATS[size_level].speed
+	velocity = direction * current_speed
 	move_and_slide()
 
 	damage_cooldown -= delta
@@ -132,3 +143,8 @@ func apply_difficulty(d):
 	difficulty = d
 	max_hp = int(SIZE_STATS[size_level].hp * (1.0 + (difficulty - 1.0) * 0.3))
 	hp = max_hp
+
+func apply_roar_boost():
+	speed_override = SIZE_STATS[size_level].speed * 1.5
+	await get_tree().create_timer(5.0).timeout
+	speed_override = -1.0
