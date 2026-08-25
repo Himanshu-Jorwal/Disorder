@@ -43,27 +43,22 @@ func _draw():
 	var col = Color(0.8, 0.6, 0.1) if not enraged else Color(1.0, 0.2, 0.0)
 	var glow_col = Color(0.9, 0.7, 0.2) if not enraged else Color(1.0, 0.4, 0.1)
 
-	# Outer glow
 	draw_circle(Vector2.ZERO, 96 + pulse * 10, Color(col.r, col.g, col.b, 0.06))
 	draw_circle(Vector2.ZERO, 80 + pulse * 8, Color(col.r, col.g, col.b, 0.12))
 
-	# Enrage aura
 	if enraged:
 		draw_circle(Vector2.ZERO, 104 + enrage_pulse * 14, Color(1.0, 0.2, 0.0, 0.12))
 
-	# Slam charge indicator — ring builds up
 	if is_slamming:
 		var charge_progress = slam_charge / slam_charge_time
 		draw_arc(Vector2.ZERO, 72, -PI / 2, -PI / 2 + TAU * charge_progress, 64, Color(1.0, 0.8, 0.0, 0.8), 4.0)
 		draw_circle(Vector2.ZERO, 96 + charge_progress * 20, Color(1.0, 0.8, 0.0, charge_progress * 0.15))
 
-	# Roar charge indicator — expanding rings
 	if is_roaring:
 		var roar_progress = roar_charge / roar_charge_time
 		draw_circle(Vector2.ZERO, 80 + roar_progress * 40, Color(0.8, 0.3, 1.0, roar_progress * 0.2))
 		draw_arc(Vector2.ZERO, 80 + roar_progress * 40, 0, TAU, 64, Color(0.8, 0.3, 1.0, roar_progress * 0.6), 3.0)
 
-	# Outer armored shell
 	var points = PackedVector2Array()
 	for i in range(6):
 		var angle = TAU * i / 6 + time * 0.2
@@ -72,45 +67,38 @@ func _draw():
 		points.append(Vector2(cos(angle), sin(angle)) * r)
 	draw_colored_polygon(points, Color(col.r * 0.3, col.g * 0.3, col.b * 0.3, 1.0))
 
-	# Mid shell
 	var mid_points = PackedVector2Array()
 	for i in range(6):
 		var angle = TAU * i / 6 + time * 0.2 + PI / 6
 		mid_points.append(Vector2(cos(angle), sin(angle)) * 50.0)
 	draw_colored_polygon(mid_points, Color(col.r * 0.5, col.g * 0.5, col.b * 0.5, 1.0))
 
-	# Inner body
 	var inner_points = PackedVector2Array()
 	for i in range(6):
 		var angle = TAU * i / 6 + time * 0.2
 		inner_points.append(Vector2(cos(angle), sin(angle)) * 38.0)
 	draw_colored_polygon(inner_points, col)
 
-	# Detail lines
 	for i in range(6):
 		var angle = TAU * i / 6 + time * 0.2
 		var inner = Vector2(cos(angle), sin(angle)) * 38.0
 		var outer = Vector2(cos(angle), sin(angle)) * 64.0
 		draw_line(inner, outer, Color(col.r * 0.6, col.g * 0.6, col.b * 0.6, 0.5), 2.0)
 
-	# Core
 	draw_circle(Vector2.ZERO, 20, Color(glow_col.r, glow_col.g, glow_col.b, 0.9))
 	draw_circle(Vector2.ZERO, 10, Color(1, 1, 1, 0.9))
 
-	# Enrage X
 	if enraged:
 		var x_size = 28.0
 		draw_line(Vector2(-x_size, -x_size), Vector2(x_size, x_size), Color(1, 0.2, 0, 0.9), 4.0)
 		draw_line(Vector2(x_size, -x_size), Vector2(-x_size, x_size), Color(1, 0.2, 0, 0.9), 4.0)
 
-	# HP bar
 	var bar_width = 120.0
 	var bar_height = 8.0
 	draw_rect(Rect2(-bar_width / 2, -85, bar_width, bar_height), Color.BLACK)
 	draw_rect(Rect2(-bar_width / 2, -85, bar_width * (float(hp) / float(max_hp)), bar_height), col)
 	draw_rect(Rect2(-bar_width / 2, -85, bar_width, bar_height), Color(col.r * 0.6, col.g * 0.6, col.b * 0.6, 0.5), false, 1.5)
 
-	# Name tag
 	var font = ThemeDB.fallback_font
 	var name_text = "GRAVEN"
 	var name_size = font.get_string_size(name_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 13)
@@ -126,7 +114,6 @@ func _physics_process(delta):
 	if not enraged and float(hp) / float(max_hp) <= ENRAGE_THRESHOLD:
 		_enrage()
 
-	# Don't move during slam charge or roar
 	if is_slamming or is_roaring:
 		velocity = Vector2.ZERO
 		move_and_slide()
@@ -134,13 +121,11 @@ func _physics_process(delta):
 		_handle_roar(delta)
 		return
 
-	# Movement
 	var current_speed = speed * (2.0 if enraged else 1.0)
 	var direction = (player.global_position - global_position).normalized()
 	velocity = direction * current_speed
 	move_and_slide()
 
-	# Contact damage
 	damage_cooldown -= delta
 	var dist = global_position.distance_to(player.global_position)
 	if dist < 80 and damage_cooldown <= 0:
@@ -148,20 +133,17 @@ func _physics_process(delta):
 		damage_cooldown = 1.0
 		player.trigger_shake(12.0, 0.3)
 
-	# Summon timer
 	summon_timer += delta
 	if summon_timer >= summon_interval:
 		summon_timer = 0.0
 		_summon_enemies()
 
-	# Slam timer
 	slam_timer += delta
 	if slam_timer >= slam_interval:
 		slam_timer = 0.0
 		is_slamming = true
 		slam_charge = 0.0
 
-	# Roar timer
 	roar_timer += delta
 	if roar_timer >= roar_interval:
 		roar_timer = 0.0
@@ -177,14 +159,13 @@ func _handle_slam(delta):
 		_release_slam()
 
 func _release_slam():
-	# 4 shockwave rings outward
 	for i in range(4):
 		var angle = TAU * i / 4
-		var shockwave = Shockwave.new()
-		shockwave.position = global_position
-		shockwave.direction = Vector2(cos(angle), sin(angle))
-		shockwave.player_ref = player
-		get_parent().add_child(shockwave)
+		var ring = SlamRing.new()
+		ring.position = global_position
+		ring.direction = Vector2(cos(angle), sin(angle))
+		ring.player_ref = player
+		get_parent().add_child(ring)
 	player.trigger_shake(14.0, 0.4)
 
 func _handle_roar(delta):
@@ -196,7 +177,6 @@ func _handle_roar(delta):
 		_release_roar()
 
 func _release_roar():
-	# Boost all nearby enemies
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		if enemy == self:
 			continue
@@ -204,7 +184,6 @@ func _release_roar():
 		if dist < 400:
 			if enemy.has_method("apply_roar_boost"):
 				enemy.apply_roar_boost()
-	# Visual roar wave
 	var roar_wave = RoarWave.new()
 	roar_wave.position = global_position
 	get_parent().add_child(roar_wave)
@@ -258,14 +237,16 @@ func apply_difficulty(d):
 	max_hp = int(max_hp * (1.0 + (difficulty - 1.0) * 0.3))
 	hp = max_hp
 
-class Shockwave extends Node2D:
+func apply_roar_boost():
+	pass
+
+class SlamRing extends Node2D:
 	var direction = Vector2.ZERO
-	var speed = 350.0
-	var lifetime = 1.2
+	var speed = 200.0
+	var lifetime = 1.5
 	var elapsed = 0.0
 	var player_ref = null
 	var hit_player = false
-	var width = 12.0
 
 	func _process(delta):
 		elapsed += delta
@@ -273,7 +254,7 @@ class Shockwave extends Node2D:
 		queue_redraw()
 		if player_ref != null and not hit_player:
 			var dist = global_position.distance_to(player_ref.global_position)
-			if dist < 30:
+			if dist < 35:
 				hit_player = true
 				player_ref.take_damage(20)
 				player_ref.trigger_shake(16.0, 0.4)
@@ -283,11 +264,12 @@ class Shockwave extends Node2D:
 	func _draw():
 		var t = elapsed / lifetime
 		var alpha = 1.0 - t
-		var size = lerp(width, width * 0.3, t)
-		draw_circle(Vector2.ZERO, size + 8, Color(0.9, 0.7, 0.1, alpha * 0.2))
-		draw_circle(Vector2.ZERO, size + 4, Color(0.9, 0.7, 0.1, alpha * 0.4))
-		draw_circle(Vector2.ZERO, size, Color(1.0, 0.9, 0.3, alpha * 0.9))
-		draw_circle(Vector2.ZERO, size * 0.4, Color(1, 1, 1, alpha * 0.8))
+		var col = Color(0.9, 0.7, 0.1)
+		var ring_radius = lerp(30.0, 8.0, t)
+		draw_circle(Vector2.ZERO, ring_radius + 12, Color(col.r, col.g, col.b, alpha * 0.15))
+		draw_arc(Vector2.ZERO, ring_radius + 6, 0, TAU, 32, Color(col.r, col.g, col.b, alpha * 0.4), 6.0)
+		draw_arc(Vector2.ZERO, ring_radius, 0, TAU, 32, Color(col.r, col.g, col.b, alpha * 0.9), 3.0)
+		draw_circle(Vector2.ZERO, ring_radius * 0.3, Color(1, 1, 1, alpha * 0.7))
 
 class RoarWave extends Node2D:
 	var lifetime = 0.8
