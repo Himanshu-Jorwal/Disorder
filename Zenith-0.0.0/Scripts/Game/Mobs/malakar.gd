@@ -5,7 +5,6 @@ const CONTACT_DAMAGE = 25
 const DEVOUR_RANGE = 80.0
 const DEVOUR_HEAL = 40.0
 const SURGE_INTERVAL = 8.0
-const SURGE_PROJECTILE_COUNT = 12
 const ENRAGE_THRESHOLD = 0.3
 
 var speed = 70.0
@@ -38,17 +37,14 @@ func _draw():
 	var pulse = (sin(time * 2.5) + 1.0) / 2.0
 	var col = Color(0.5, 0.0, 0.0) if not enraged else Color(0.9, 0.0, 0.0)
 
-	# Outer aura
 	draw_circle(Vector2.ZERO, 55 + pulse * 8, Color(col.r, col.g, col.b, 0.08))
 	draw_circle(Vector2.ZERO, 48 + pulse * 6, Color(col.r, col.g, col.b, 0.14))
 
-	# Surge charge indicator
 	if is_surging:
 		var charge_progress = surge_charge / SURGE_CHARGE_TIME
 		draw_circle(Vector2.ZERO, 55 + charge_progress * 20, Color(0.8, 0.0, 0.0, charge_progress * 0.2))
 		draw_arc(Vector2.ZERO, 50, -PI / 2, -PI / 2 + TAU * charge_progress, 64, Color(0.9, 0.1, 0.1, 0.8), 3.0)
 
-	# Body — irregular blob
 	var points = PackedVector2Array()
 	var steps = 20
 	for i in range(steps):
@@ -58,7 +54,6 @@ func _draw():
 		points.append(Vector2(cos(angle), sin(angle)) * r)
 	draw_colored_polygon(points, col)
 
-	# Inner lighter layer
 	var inner_points = PackedVector2Array()
 	for i in range(steps):
 		var angle = TAU * i / steps
@@ -67,31 +62,26 @@ func _draw():
 		inner_points.append(Vector2(cos(angle), sin(angle)) * r)
 	draw_colored_polygon(inner_points, Color(col.r + 0.2, col.g, col.b, 1.0))
 
-	# Stored devours indicator — glowing orbs orbiting body
 	for i in range(stored_devours):
 		var angle = TAU * i / max(stored_devours, 1) + time * 1.5
 		var orbit_pos = Vector2(cos(angle), sin(angle)) * 48.0
 		draw_circle(orbit_pos, 6.0, Color(1.0, 0.3, 0.3, 0.9))
 		draw_circle(orbit_pos, 3.0, Color(1.0, 0.8, 0.8, 0.9))
 
-	# Core
 	draw_circle(Vector2.ZERO, 14, Color(0.8, 0.1, 0.1, 0.9))
 	draw_circle(Vector2.ZERO, 7, Color(1.0, 0.3, 0.3, 0.9))
 	draw_circle(Vector2.ZERO, 3, Color(1, 1, 1, 0.9))
 
-	# Enrage effect
 	if enraged:
 		var enrage_pulse = (sin(time * 8.0) + 1.0) / 2.0
 		draw_circle(Vector2.ZERO, 50 + enrage_pulse * 10, Color(1.0, 0.0, 0.0, 0.15))
 
-	# HP bar
 	var bar_width = 100.0
 	var bar_height = 8.0
 	draw_rect(Rect2(-bar_width / 2, -65, bar_width, bar_height), Color.BLACK)
 	draw_rect(Rect2(-bar_width / 2, -65, bar_width * (float(hp) / float(max_hp)), bar_height), Color(0.8, 0.0, 0.0))
 	draw_rect(Rect2(-bar_width / 2, -65, bar_width, bar_height), Color(0.5, 0.0, 0.0, 0.5), false, 1.5)
 
-	# Name
 	var font = ThemeDB.fallback_font
 	var name_text = "MALAKAR"
 	var name_size = font.get_string_size(name_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 13)
@@ -104,11 +94,9 @@ func _physics_process(delta):
 	time += delta
 	queue_redraw()
 
-	# Check enrage
 	if not enraged and float(hp) / float(max_hp) <= ENRAGE_THRESHOLD:
 		_enrage()
 
-	# Surge charging
 	if is_surging:
 		velocity = Vector2.ZERO
 		move_and_slide()
@@ -118,12 +106,10 @@ func _physics_process(delta):
 			_release_surge()
 		return
 
-	# Movement
 	var direction = (player.global_position - global_position).normalized()
 	velocity = direction * speed
 	move_and_slide()
 
-	# Contact damage
 	damage_cooldown -= delta
 	var dist = global_position.distance_to(player.global_position)
 	if dist < 55 and damage_cooldown <= 0:
@@ -131,12 +117,10 @@ func _physics_process(delta):
 		damage_cooldown = 1.0
 		player.trigger_shake(10.0, 0.25)
 
-	# Devour nearby normal enemies
 	devour_cooldown -= delta
 	if devour_cooldown <= 0 and not enraged:
 		_try_devour()
 
-	# Surge timer
 	surge_timer += delta
 	if surge_timer >= SURGE_INTERVAL:
 		surge_timer = 0.0
@@ -151,30 +135,25 @@ func _try_devour():
 			continue
 		var dist = global_position.distance_to(enemy.global_position)
 		if dist < DEVOUR_RANGE:
-			# Pull effect then devour
 			var pull = DevourPull.new()
 			pull.position = enemy.global_position
 			pull.target = global_position
 			get_parent().add_child(pull)
-			# Heal
 			hp = min(hp + DEVOUR_HEAL, max_hp)
 			stored_devours = min(stored_devours + 1, 8)
 			speed = min(speed + 5.0, 110.0)
 			enemy.queue_free()
-			devour_cooldown = 1.5
+			devour_cooldown = 3.0
 			break
 
 func _release_surge():
-	var count = SURGE_PROJECTILE_COUNT + stored_devours * 2
-	for i in range(count):
-		var angle = TAU * i / count
-		var proj = BloodProjectile.new()
-		proj.position = global_position
-		proj.direction = Vector2(cos(angle), sin(angle))
-		proj.player_ref = player
-		proj.speed = 150.0 if not enraged else 220.0
-		get_parent().add_child(proj)
+	var ring = BloodRing.new()
+	ring.position = global_position
+	ring.player_ref = player
+	ring.enraged = enraged
+	get_parent().add_child(ring)
 	stored_devours = 0
+	player.trigger_shake(10.0, 0.3)
 
 func _enrage():
 	enraged = true
@@ -190,15 +169,6 @@ func take_damage(amount):
 
 func die():
 	player.gain_xp(XP_VALUE)
-	# Death nova
-	for i in range(16):
-		var angle = TAU * i / 16
-		var proj = BloodProjectile.new()
-		proj.position = global_position
-		proj.direction = Vector2(cos(angle), sin(angle))
-		proj.player_ref = player
-		proj.speed = 200.0
-		get_parent().add_child(proj)
 	for i in range(8):
 		var angle = TAU * i / 8
 		var effect = BloodParticle.new()
@@ -238,43 +208,35 @@ class DevourPull extends Node2D:
 		draw_line(Vector2.ZERO, to_target * t, Color(0.9, 0.1, 0.1, alpha), 3.0)
 		draw_circle(Vector2.ZERO, lerp(8.0, 2.0, t), Color(1.0, 0.2, 0.2, alpha))
 
-class BloodProjectile extends Node2D:
-	var direction = Vector2.ZERO
-	var speed = 150.0
-	var lifetime = 2.5
+class BloodRing extends Node2D:
+	var lifetime = 1.5
 	var elapsed = 0.0
 	var player_ref = null
-	var hit = false
+	var hit_player = false
+	var enraged = false
+	var max_radius = 300.0
 
 	func _process(delta):
 		elapsed += delta
-		lifetime -= delta
-		position += direction * speed * delta
 		queue_redraw()
-		if lifetime <= 0:
-			queue_free()
-			return
-		if player_ref != null and not hit:
+		if player_ref != null and not hit_player:
 			var dist = global_position.distance_to(player_ref.global_position)
-			if dist < 18:
-				hit = true
+			var current_radius = lerp(0.0, max_radius, elapsed / lifetime)
+			if dist < current_radius + 20 and dist > current_radius - 20:
+				hit_player = true
 				player_ref.take_damage(20)
-				player_ref.trigger_shake(10.0, 0.25)
-				queue_free()
+				player_ref.trigger_shake(12.0, 0.3)
+		if elapsed >= lifetime:
+			queue_free()
 
 	func _draw():
-		var t = elapsed / (elapsed + lifetime)
-		var alpha = 1.0 - t * 0.5
-		var forward = direction.normalized()
-		var perp = forward.rotated(PI / 2)
-		var points = PackedVector2Array([
-			forward * 10.0,
-			perp * 5.0,
-			-forward * 5.0,
-			-perp * 5.0
-		])
-		draw_colored_polygon(points, Color(0.8, 0.0, 0.0, alpha))
-		draw_circle(Vector2.ZERO, 4, Color(1.0, 0.3, 0.3, alpha * 0.8))
+		var t = elapsed / lifetime
+		var alpha = 1.0 - t
+		var current_radius = lerp(0.0, max_radius, t)
+		var width = lerp(20.0, 4.0, t)
+		draw_arc(Vector2.ZERO, current_radius + width, 0, TAU, 64, Color(0.6, 0.0, 0.0, alpha * 0.2), width * 2)
+		draw_arc(Vector2.ZERO, current_radius, 0, TAU, 64, Color(0.9, 0.0, 0.0, alpha * 0.8), width)
+		draw_arc(Vector2.ZERO, current_radius - width * 0.3, 0, TAU, 64, Color(1.0, 0.3, 0.3, alpha * 0.5), width * 0.5)
 
 class BloodParticle extends Node2D:
 	var direction = Vector2.ZERO
