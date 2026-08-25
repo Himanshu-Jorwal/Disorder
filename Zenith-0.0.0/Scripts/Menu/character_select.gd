@@ -28,7 +28,7 @@ var characters = [
 	},
 	{
 		"name": "Milano",
-		"gender": "Male",
+		"gender": "Female",
 		"attack1": "Chime",
 		"attack2": "Rift",
 		"absolute": "Absolute3",
