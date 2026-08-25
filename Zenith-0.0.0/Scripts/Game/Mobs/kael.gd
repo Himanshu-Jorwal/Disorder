@@ -162,3 +162,6 @@ class CorruptZone extends Node2D:
 			var r = radius * randf_range(0.2, 0.7)
 			var ember_pos = Vector2(cos(angle), sin(angle)) * r
 			draw_circle(ember_pos, 2.5, Color(1.0, 0.5, 0.0, alpha * 0.8))
+			
+func apply_roar_boost():
+	pass

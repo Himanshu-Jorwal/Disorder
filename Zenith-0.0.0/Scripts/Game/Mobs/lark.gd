@@ -156,3 +156,8 @@ class LarkProjectile extends Node2D:
 			if dist < 20:
 				player_ref.trigger_shake(12.0, 0.4)
 				queue_free()
+				
+func apply_roar_boost():
+	chase_speed *= 1.5
+	await get_tree().create_timer(5.0).timeout
+	chase_speed /= 1.5

@@ -11,6 +11,7 @@ var max_hp = 25
 var damage_cooldown = 0.0
 var current_phase = 0
 var difficulty = 1.0
+var speed = BASE_SPEED
 
 enum State { CHASE, TELEGRAPH, DASH, RECOVER }
 var state = State.CHASE
@@ -126,3 +127,8 @@ func apply_difficulty(d):
 	difficulty = d
 	max_hp = int(max_hp * (1.0 + (difficulty - 1.0) * 0.3))
 	hp = max_hp
+	
+func apply_roar_boost():
+	speed *= 1.5
+	await get_tree().create_timer(5.0).timeout
+	speed /= 1.5
