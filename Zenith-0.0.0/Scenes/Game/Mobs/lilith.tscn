@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://cp4xeidbcn0ta"]
+
+[ext_resource type="Script" uid="uid://bbel1663t4t7" path="res://Scripts/Game/Mobs/lilith.gd" id="1_dd22a"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5dthu"]
+radius = 50.0
+
+[node name="Lilith" type="CharacterBody2D" unique_id=330600059]
+script = ExtResource("1_dd22a")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1927008686]
+shape = SubResource("CircleShape2D_5dthu")
