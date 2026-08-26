@@ -10,6 +10,12 @@ var card_height = 520.0
 var card_spacing = 50.0
 var time = 0.0
 
+var character_textures = [
+	preload("res://Assets/Characters/zaire.png"),
+	preload("res://Assets/Characters/daggers.png"),
+	preload("res://Assets/Characters/milano.png")
+]
+
 func setup(chars, sel):
 	characters = chars
 	selected = sel
@@ -70,13 +76,10 @@ func _draw():
 		if is_hovered:
 			draw_rect(Rect2(pos.x - 3, pos.y - 3, card_width + 6, card_height + 6), Color(col.r, col.g, col.b, 0.08 + pulse * 0.05), false, 6.0)
 
-		# Art placeholder
+		# Character art
 		var art_height = 300.0
-		draw_rect(Rect2(pos.x, pos.y, card_width, art_height), Color(col.r * 0.15, col.g * 0.15, col.b * 0.15, 1.0))
-		var sil_center = Vector2(pos.x + card_width / 2, pos.y + art_height / 2)
-		draw_circle(sil_center, 45, Color(col.r * 0.3, col.g * 0.3, col.b * 0.3, 1.0))
-		draw_circle(sil_center, 35, Color(col.r * 0.5, col.g * 0.5, col.b * 0.5, 1.0))
-		draw_circle(sil_center, 20, Color(col.r, col.g, col.b, 0.9))
+		var texture = character_textures[i]
+		draw_texture_rect(texture, Rect2(pos.x, pos.y, card_width, art_height), false)
 		draw_line(Vector2(pos.x, pos.y + art_height), Vector2(pos.x + card_width, pos.y + art_height), border_col, 1.5)
 
 		# Character name
