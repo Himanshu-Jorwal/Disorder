@@ -74,7 +74,7 @@ func _draw():
 			draw_arc(Vector2.ZERO, 16, time * 3.0, time * 3.0 + TAU * 0.7, 32, Color(col.r, col.g, col.b, 0.6), 2.0)
 
 func _ready():
-	pass
+	add_to_group("bullets")
 
 func _process(delta):
 	time += delta
