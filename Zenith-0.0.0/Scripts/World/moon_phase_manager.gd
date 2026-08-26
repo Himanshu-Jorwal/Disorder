@@ -20,6 +20,7 @@ const PHASE_NAMES = {
 
 const PHASE_DURATION = 10.0
 
+var paused = false
 var current_phase = Phase.CRESCENT
 var phase_timer = 0.0
 var phase_order = [
@@ -31,10 +32,14 @@ var phase_order = [
 	Phase.NEW
 ]
 var phase_index = 0
+var cycles_completed = 0
 
 signal phase_changed(new_phase)
+signal cycle_completed(cycle_number)
 
 func _process(delta):
+	if paused:
+		return
 	phase_timer += delta
 	if phase_timer >= PHASE_DURATION:
 		phase_timer = 0.0
@@ -45,6 +50,14 @@ func advance_phase():
 	current_phase = phase_order[phase_index]
 	print("Moon Phase: ", PHASE_NAMES[current_phase])
 	emit_signal("phase_changed", current_phase)
+	# Check if completed a full cycle
+	if phase_index == 0:
+		cycles_completed += 1
+		print("Moon Cycle Complete: ", cycles_completed)
+		emit_signal("cycle_completed", cycles_completed)
 
 func get_phase_name():
 	return PHASE_NAMES[current_phase]
+
+func get_cycles_completed():
+	return cycles_completed
