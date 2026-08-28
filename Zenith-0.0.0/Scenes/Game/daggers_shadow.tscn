@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cb2i764gydrqn"]
+
+[ext_resource type="Script" uid="uid://dojyujvwwhvuv" path="res://Scripts/Game/daggers_shadow.gd" id="1_l50dp"]
+
+[node name="DaggersClone" type="Node2D" unique_id=1828782004]
+script = ExtResource("1_l50dp")
