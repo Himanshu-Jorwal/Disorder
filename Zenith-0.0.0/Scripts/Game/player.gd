@@ -129,40 +129,68 @@ func _zaire_crossbow():
 	var spread_angles = [-12.0, 0.0, 12.0]
 	for angle in spread_angles:
 		var dir = base_dir.rotated(deg_to_rad(angle))
-		_spawn_star_bullet(global_position, dir, 12, Color(0.8, 0.4, 1.0))
+		_spawn_star_bullet(global_position, dir, 20, Color(0.85, 0.95, 1.0))
 
 func _zaire_lance():
 	var mouse_pos = get_global_mouse_position()
 	var dir = (mouse_pos - global_position).normalized()
-	_spawn_piercing_bullet(global_position, dir, 35, Color(0.9, 0.6, 1.0))
+	_spawn_piercing_bullet(global_position, dir, 50, Color(0.6, 0.9, 1.0))
 
 func _zaire_absolute():
 	for i in range(24):
 		var angle = TAU * i / 24
 		var dir = Vector2(cos(angle), sin(angle))
-		_spawn_star_bullet(global_position, dir, 20, Color(1.0, 0.8, 1.0))
+		_spawn_tracking_bullet(global_position, dir, 15, Color(1.0, 0.95, 0.7))
 
 # --- DAGGERS ---
 func _daggers_shard():
 	var mouse_pos = get_global_mouse_position()
 	var dir = (mouse_pos - global_position).normalized()
-	var perp = dir.rotated(PI / 2)
-	_spawn_shard_bullet(global_position + perp * 5, dir, 15, Color(0.2, 0.9, 0.8))
-	_spawn_shard_bullet(global_position - perp * 5, dir, 15, Color(0.2, 0.9, 0.8))
+	_spawn_splitting_shard(global_position, dir, 20, Color(0.2, 0.9, 0.8))
 
 func _daggers_mirror():
-	var mouse_pos = get_global_mouse_position()
-	var dir = (mouse_pos - global_position).normalized()
-	for i in range(8):
-		var angle = TAU * i / 8
-		var d = Vector2(cos(angle), sin(angle))
-		_spawn_shard_bullet(global_position, d, 18, Color(0.3, 1.0, 0.9))
+	var clone = preload("res://Scenes/Game/daggers_shadow.tscn").instantiate()
+	clone.position = global_position
+	clone.player_ref = self
+	get_parent().add_child(clone)
 
 func _daggers_absolute():
-	for i in range(16):
-		var angle = TAU * i / 16
-		var dir = Vector2(cos(angle), sin(angle))
-		_spawn_returning_shard(global_position, dir, 20, Color(0.4, 1.0, 0.9))
+	var mouse_pos = get_global_mouse_position()
+	var dir = (mouse_pos - global_position).normalized()
+	var start_pos = global_position
+	var end_pos = global_position + dir * 750.0
+	end_pos.x = clamp(end_pos.x, -1450, 1450)
+	end_pos.y = clamp(end_pos.y, -950, 950)
+
+	# Invulnerable during dash
+	is_invincible = true
+	invincibility_timer = 0.3
+	flash_timer = 0.05
+
+	# Damage enemies in path
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		var enemy_pos = enemy.global_position
+		var ab = end_pos - start_pos
+		var t = clamp((enemy_pos - start_pos).dot(ab) / ab.dot(ab), 0.0, 1.0)
+		var closest = start_pos + ab * t
+		var dist = enemy_pos.distance_to(closest)
+		if dist < 40:
+			enemy.take_damage(int(80 * damage_multiplier))
+			var sideways = dir.rotated(PI / 2)
+			if enemy_pos.dot(sideways) < global_position.dot(sideways):
+				sideways = -sideways
+			enemy.global_position += sideways * 150.0
+
+	# Trail visual
+	var slash = preload("res://Scenes/Game/daggers_press.tscn").instantiate()
+	slash.start = start_pos
+	slash.end = end_pos
+	get_parent().add_child(slash)
+
+	# Smooth dash using tween
+	var tween = create_tween()
+	tween.tween_property(self, "global_position", end_pos, 0.08)
+	trigger_shake(6.0, 0.15)
 
 # --- MILANO ---
 func _milano_chime():
@@ -220,6 +248,16 @@ func _spawn_beam(pos, dir):
 	var beam = preload("res://Scenes/Game/beam.tscn").instantiate()
 	get_parent().add_child(beam)
 	beam.setup(pos, dir)
+	
+func _spawn_tracking_bullet(pos, dir, dmg, col):
+	var bullet = preload("res://Scenes/Game/bullet.tscn").instantiate()
+	get_parent().add_child(bullet)
+	bullet.setup(pos, dir, int(dmg * damage_multiplier), col, false, false, false, "tracking")	
+
+func _spawn_splitting_shard(pos, dir, dmg, col):
+	var bullet = preload("res://Scenes/Game/bullet.tscn").instantiate()
+	get_parent().add_child(bullet)
+	bullet.setup(pos, dir, int(dmg * damage_multiplier), col, false, false, false, "splitting_shard")
 
 func take_damage(amount):
 	if is_invincible:
