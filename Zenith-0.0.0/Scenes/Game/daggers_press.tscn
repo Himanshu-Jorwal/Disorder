@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bh547t0df2p7x"]
+
+[ext_resource type="Script" uid="uid://csw4ikit6i8yg" path="res://Scripts/Game/daggers_press.gd" id="1_57qjw"]
+
+[node name="DashSlash" type="Node2D" unique_id=813554365]
+script = ExtResource("1_57qjw")
