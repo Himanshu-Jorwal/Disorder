@@ -54,8 +54,8 @@ func _draw():
 	draw_line(Vector2(0, 2), Vector2(screen.x, 2), Color(0.3, 0.3, 0.3, 0.4), 1.0)
 	draw_line(Vector2(0, screen.y - 2), Vector2(screen.x, screen.y - 2), Color(0.3, 0.3, 0.3, 0.4), 1.0)
 
-	# ZENITH title
-	var title = "ZENITH"
+	# DISORDER title
+	var title = "DISORDER"
 	var title_size = 72
 	var ts = font.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, title_size)
 	draw_string(font, Vector2(cx - ts.x / 2 + 3, screen.y / 2 - 100 + 3), title, HORIZONTAL_ALIGNMENT_LEFT, -1, title_size, Color(0, 0, 0, 0.8))

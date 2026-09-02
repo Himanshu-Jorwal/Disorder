@@ -1,4 +1,4 @@
-# Zenith
+# Disorder
 
 A top-down survival game I'm building in Godot 4 during my summer break.
 
@@ -17,7 +17,7 @@ The world is always night. The moon changes everything.
 
 ## Project Structure
 
-Zenith-0.0.0/
+Disorder-0.0.0/
 ├── Assets/
 │ ├── Characters/ # Character card art
 │ └── HUD/ # HUD textures
@@ -41,10 +41,10 @@ Zenith-0.0.0/
 You'll need Godot 4 - grab it from [godotengine.org](https://godotengine.org/download)
 
 ```bash
-git clone https://github.com/Himanshu-Jorwal/Zenith.git
+git clone https://github.com/Himanshu-Jorwal/Disorder.git
 ```
 
-Then open Godot, hit Import, find `Zenith-0.0.0/project.godot` and open it. Press F5 to run.
+Then open Godot, hit Import, find `Disorder-0.0.0/project.godot` and open it. Press F5 to run.
 
 ---
 
