@@ -17,22 +17,24 @@ The world is always night. The moon changes everything.
 
 ## Project Structure
 
-Disorder-0.0.0/
+```
+Disorder-0.0.1/
 ├── Assets/
 │ ├── Characters/ # Character card art
 │ └── HUD/ # HUD textures
 ├── Scenes/
 │ ├── Game/ # Core gameplay scenes and abilities
 │ │ └── Mobs/ # All enemy, mini boss and boss scenes
-│ ├── UI/ # HUD, menus, overlays
-│ └── Menu/ # Main menu, character select, bootstrap
+│ ├── UI/ # HUD, upgrade, pause, game over
+│ └── Menu/ # Main menu, character select, credits, bootstrap
 ├── Scripts/
 │ ├── Game/ # Player, bullets, world, ability scripts
 │ │ └── Mobs/ # All enemy, mini boss and boss scripts
 │ ├── UI/ # HUD, upgrade, pause, game over
-│ ├── Menu/ # Main menu, character select logic
+│ ├── Menu/ # Main menu, character select, credits logic
 │ └── World/ # Moon system, background, border
 └── project.godot
+```
 
 ---
 
@@ -44,7 +46,7 @@ You'll need Godot 4 - grab it from [godotengine.org](https://godotengine.org/dow
 git clone https://github.com/Himanshu-Jorwal/Disorder.git
 ```
 
-Then open Godot, hit Import, find `Disorder-0.0.0/project.godot` and open it. Press F5 to run.
+Then open Godot, hit Import, find `Disorder-0.0.1/project.godot` and open it. Press F5 to run.
 
 ---
 
@@ -85,7 +87,7 @@ Three playable characters each with unique abilities:
 - XP and leveling with upgrade system
 - Hearts based HP display
 - Ability cooldown indicators on HUD
-- Main menu, character select, pause menu, game over screen
+- Main menu, character select, pause menu, upgrade menu, game over screen, and a credits screen - all sharing one consistent dark, minimal, code-drawn UI style
 - Screen shake on damage
 - Fullscreen support
 
@@ -98,6 +100,7 @@ Three playable characters each with unique abilities:
 - Balance pass
 - Sound effects
 - Enemy and character sprites
+- Settings menu
 - Web build on itch.io
 
 ---
