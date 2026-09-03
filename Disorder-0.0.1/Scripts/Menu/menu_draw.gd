@@ -1,6 +1,7 @@
 extends Node2D
 
 signal start_pressed
+signal credits_pressed
 signal exit_pressed
 
 var time = 0.0
@@ -14,7 +15,8 @@ func _ready():
 	var cy = screen.y / 2
 	buttons = [
 		{"label": "START GAME", "rect": Rect2(cx - 100, cy + 20, 200, 44)},
-		{"label": "EXIT", "rect": Rect2(cx - 100, cy + 80, 200, 44)},
+		{"label": "CREDITS", "rect": Rect2(cx - 100, cy + 80, 200, 44)},
+		{"label": "EXIT", "rect": Rect2(cx - 100, cy + 140, 200, 44)},
 	]
 
 func _process(delta):
@@ -34,6 +36,8 @@ func _input(event):
 				if i == 0:
 					emit_signal("start_pressed")
 				elif i == 1:
+					emit_signal("credits_pressed")
+				elif i == 2:
 					emit_signal("exit_pressed")
 
 func _draw():
@@ -84,9 +88,12 @@ func _draw():
 		var ly = btn.rect.position.y + btn.rect.size.y / 2 + label_size.y / 2 - 4
 		draw_string(font, Vector2(lx, ly), btn.label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, text_col)
 
-	# Credits
-	var credits = "developed by Deva Path   github.com/Himanshu-Jorwal"
-	draw_string(font, Vector2(15, screen.y - 14), credits, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.3, 0.3, 0.3, 0.6))
+	# Byline — footer corner, bigger/more visible than the old tiny credit line
+	var byline = "- BY DEVA PATH"
+	draw_string(font, Vector2(15, screen.y - 16), byline, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.55, 0.55, 0.6, 0.85))
 
-	# Version
-	draw_string(font, Vector2(screen.x - 60, screen.y - 14), "v0.0.0", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.3, 0.3, 0.3, 0.5))
+	# Version — right-aligned to screen edge, sized up so it's actually legible
+	var version = "v0.0.1"
+	var version_size = 15
+	var vs = font.get_string_size(version, HORIZONTAL_ALIGNMENT_LEFT, -1, version_size)
+	draw_string(font, Vector2(screen.x - vs.x - 15, screen.y - 16), version, HORIZONTAL_ALIGNMENT_LEFT, -1, version_size, Color(0.5, 0.5, 0.55, 0.8))
