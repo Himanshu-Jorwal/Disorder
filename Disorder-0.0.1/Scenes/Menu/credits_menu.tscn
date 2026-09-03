@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/Menu/credits_menu.gd" id="1_cmenu"]
+[ext_resource type="Script" path="res://Scripts/Menu/credits_draw.gd" id="2_cdraw"]
+
+[node name="CreditsMenu" type="CanvasLayer"]
+script = ExtResource("1_cmenu")
+
+[node name="CreditsDraw" type="Node2D" parent="."]
+script = ExtResource("2_cdraw")
