@@ -3,10 +3,10 @@ extends CanvasLayer
 @onready var draw = $UpgradeDraw
 
 var upgrades = [
-	{"name": "Damage +25%", "type": "damage", "value": 0.25},
-	{"name": "Fire Rate +25%", "type": "fire_rate", "value": 0.25},
-	{"name": "Move Speed +20%", "type": "speed", "value": 0.20},
-	{"name": "Max HP +20", "type": "hp", "value": 20},
+	{"name": "Damage +10%", "type": "damage", "value": 0.10},
+	{"name": "Fire Rate +10%", "type": "fire_rate", "value": 0.10},
+	{"name": "Move Speed +10%", "type": "speed", "value": 0.10},
+	{"name": "Heart +1", "type": "hp", "value": 20},
 ]
 
 var player = null
