@@ -22,6 +22,7 @@ var hud = null
 var moon = null
 var current_phase = 0
 var pause_menu = null
+var background = null
 
 var graven_spawned = false
 var malakar_spawned = false
@@ -33,6 +34,7 @@ func _ready():
 	hud = $HUD
 	moon = $MoonPhaseManager
 	pause_menu = $PauseMenu
+	background = $Background
 	player.upgrade_menu = $UpgradeMenu
 	moon.phase_changed.connect(_on_phase_changed)
 	moon.cycle_completed.connect(_on_cycle_completed)
@@ -91,6 +93,7 @@ func _on_phase_changed(phase):
 	hud.update_moon(moon.get_phase_name())
 	update_existing_enemies(phase)
 	$HUD.get_node("Moon").set_phase(phase)
+	background.set_phase(phase)
 
 	if phase == 2 and not graven_spawned:
 		graven_spawned = true
