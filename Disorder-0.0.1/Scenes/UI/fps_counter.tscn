@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/fps_counter_draw.gd" id="1_fpsdraw"]
+
+[node name="FPSCounter" type="CanvasLayer"]
+layer = 128
+
+[node name="FPSCounterDraw" type="Node2D" parent="."]
+script = ExtResource("1_fpsdraw")
