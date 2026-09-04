@@ -9,12 +9,17 @@
 [ext_resource type="Script" uid="uid://bji6d88ru7gkl" path="res://Scripts/World/moon_phase_manager.gd" id="7_oqugm"]
 [ext_resource type="PackedScene" uid="uid://c201kqm66rjry" path="res://Scenes/UI/pause_menu.tscn" id="8_5ori0"]
 [ext_resource type="PackedScene" uid="uid://77l5kf4owvtw" path="res://Scenes/Game/world_border.tscn" id="9_xvcwp"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/fps_counter.tscn" id="10_fpsc"]
+[ext_resource type="Script" path="res://Scripts/World/nebula_layer.gd" id="11_nebula"]
 
 [node name="World" type="Node2D" unique_id=2012631685]
 script = ExtResource("1_j8hn3")
 
 [node name="Background" type="Node2D" parent="." unique_id=1399810713]
 script = ExtResource("2_xvcwp")
+
+[node name="NebulaLayer" type="Node2D" parent="Background"]
+script = ExtResource("11_nebula")
 
 [node name="Player" parent="." unique_id=1038469765 instance=ExtResource("3_6y6xk")]
 collision_layer = 2
@@ -31,3 +36,5 @@ script = ExtResource("7_oqugm")
 [node name="PauseMenu" parent="." unique_id=1995346967 instance=ExtResource("8_5ori0")]
 
 [node name="WorldBorder" parent="." unique_id=1048687757 instance=ExtResource("9_xvcwp")]
+
+[node name="FPSCounter" parent="." instance=ExtResource("10_fpsc")]
