@@ -198,7 +198,7 @@ func _physics_process(delta):
 
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and attack1_cooldown <= 0.0:
 		use_attack1()
-		attack1_cooldown = ATTACK1_MAX_COOLDOWN
+		attack1_cooldown = ATTACK1_MAX_COOLDOWN / fire_rate_multiplier
 
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) and attack2_cooldown <= 0.0:
 		use_attack2()
