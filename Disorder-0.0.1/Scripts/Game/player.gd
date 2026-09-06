@@ -25,6 +25,11 @@ var camera = null
 
 var character_name = "Zaire"
 var character_color = Color(0.6, 0.3, 1.0)
+var has_sprite = false
+var sprite_facing_reversed = false
+var bob_timer = 0.0
+var daggers_trail_node = null
+var mirror_smooth = 1.0
 var attack1_name = "Crossbow"
 var attack2_name = "Lance"
 var absolute_name = "Absolute1"
@@ -46,11 +51,12 @@ var milano_beam_angle = 0.0
 
 func _draw():
 	if is_visible:
-		draw_circle(Vector2.ZERO, 28, Color(character_color.r, character_color.g, character_color.b, 0.03))
-		draw_circle(Vector2.ZERO, 24, Color(character_color.r, character_color.g, character_color.b, 0.06))
-		draw_circle(Vector2.ZERO, 20, Color(character_color.r, character_color.g, character_color.b, 0.1))
-		draw_circle(Vector2.ZERO, 16, character_color)
-		draw_circle(Vector2.ZERO, 8, Color(1, 1, 1, 0.8))
+		if not has_sprite:
+			draw_circle(Vector2.ZERO, 28, Color(character_color.r, character_color.g, character_color.b, 0.03))
+			draw_circle(Vector2.ZERO, 24, Color(character_color.r, character_color.g, character_color.b, 0.06))
+			draw_circle(Vector2.ZERO, 20, Color(character_color.r, character_color.g, character_color.b, 0.1))
+			draw_circle(Vector2.ZERO, 16, character_color)
+			draw_circle(Vector2.ZERO, 8, Color(1, 1, 1, 0.8))
 
 	# Milano beam
 	if milano_beam_active:
@@ -167,6 +173,29 @@ func _ready():
 	absolute_name = data.absolute
 	camera = $Camera2D
 
+	var sprite_path = ""
+	match character_name:
+		"Zaire": sprite_path = "res://Assets/Characters/InGame/zaire.png"
+		"Daggers": sprite_path = "res://Assets/Characters/InGame/daggers.png"
+		"Milano": sprite_path = "res://Assets/Characters/InGame/milano.png"
+
+	if sprite_path != "" and ResourceLoader.exists(sprite_path):
+		$CharacterSprite.texture = load(sprite_path)
+		has_sprite = true
+	else:
+		$CharacterSprite.visible = false
+		has_sprite = false
+
+	match character_name:
+		"Daggers": sprite_facing_reversed = true
+		"Milano": sprite_facing_reversed = true
+		_: sprite_facing_reversed = false
+
+	if character_name == "Daggers":
+		daggers_trail_node = Node2D.new()
+		daggers_trail_node.set_script(load("res://Scripts/Game/daggers_trail.gd"))
+		get_parent().add_child.call_deferred(daggers_trail_node)
+
 func _physics_process(delta):
 	time_alive += delta
 	score = int(time_alive * 10) + (level * 100)
@@ -181,10 +210,14 @@ func _physics_process(delta):
 		if flash_timer <= 0.0:
 			is_visible = !is_visible
 			flash_timer = FLASH_RATE
+			if has_sprite:
+				$CharacterSprite.visible = is_visible
 			queue_redraw()
 		if invincibility_timer <= 0.0:
 			is_invincible = false
 			is_visible = true
+			if has_sprite:
+				$CharacterSprite.visible = true
 			queue_redraw()
 
 	var direction = Vector2.ZERO
@@ -195,6 +228,36 @@ func _physics_process(delta):
 	direction = direction.normalized()
 	velocity = direction * BASE_SPEED * speed_multiplier
 	move_and_slide()
+
+	if has_sprite:
+		# Flip to face whichever side the mouse is on
+		var mouse_pos = get_global_mouse_position()
+		var base_scale = abs($CharacterSprite.scale.x)
+		var facing_left = mouse_pos.x < global_position.x
+		if sprite_facing_reversed:
+			facing_left = not facing_left
+		if facing_left:
+			$CharacterSprite.scale.x = base_scale
+		else:
+			$CharacterSprite.scale.x = -base_scale
+
+		# Small bob while actively moving, settles back to rest when still
+		if direction.length() > 0.01:
+			bob_timer += delta * 12.0
+			$CharacterSprite.position.y = sin(bob_timer) * 1.3
+		else:
+			bob_timer = 0.0
+			$CharacterSprite.position.y = lerp($CharacterSprite.position.y, 0.0, delta * 10.0)
+
+		# Daggers leaves twin fading trail streaks, anchored at her actual held daggers
+		if character_name == "Daggers" and daggers_trail_node:
+			var mirror_target = 1.0 if $CharacterSprite.scale.x >= 0 else -1.0
+			mirror_smooth = move_toward(mirror_smooth, mirror_target, delta * 8.0)
+			if direction.length() > 0.01:
+				# Measured directly from the 128x128 sprite's blade positions, scaled to world units (x0.45)
+				var hand_a = Vector2(-14.0 * mirror_smooth, 13.5)
+				var hand_b = Vector2(14.5 * mirror_smooth, 13.5)
+				daggers_trail_node.add_point(global_position + hand_a, global_position + hand_b)
 
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and attack1_cooldown <= 0.0:
 		use_attack1()
