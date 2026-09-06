@@ -2,7 +2,7 @@ extends Node2D
 
 var start = Vector2.ZERO
 var end = Vector2.ZERO
-var color = Color(0.3, 1.0, 0.9)
+var color = Color(0.2, 0.9, 0.75)
 var elapsed = 0.0
 var lifetime = 0.6
 var time = 0.0
@@ -39,16 +39,16 @@ func _draw():
 		# Bottom edge crack
 		var crack0_bot = p0 - perp * (lerp(10.0, 3.0, t) + sin(t0 * TAU * 5.0 + elapsed * 20.0 + PI) * lerp(4.0, 1.0, t))
 		var crack1_bot = p1 - perp * (lerp(10.0, 3.0, t) + sin(t1 * TAU * 5.0 + elapsed * 20.0 + PI) * lerp(4.0, 1.0, t))
-		# Outer purple void glow
-		draw_line(crack0_top, crack1_top, Color(0.5, 0.0, 0.8, alpha * 0.2), 6.0)
-		draw_line(crack0_bot, crack1_bot, Color(0.5, 0.0, 0.8, alpha * 0.2), 6.0)
+		# Outer void glow, tinted to Daggers' color
+		draw_line(crack0_top, crack1_top, Color(color.r, color.g, color.b, alpha * 0.2), 6.0)
+		draw_line(crack0_bot, crack1_bot, Color(color.r, color.g, color.b, alpha * 0.2), 6.0)
 		# Bright white crack
 		draw_line(crack0_top, crack1_top, Color(0.8, 0.95, 1.0, alpha * 0.8), 1.5)
 		draw_line(crack0_bot, crack1_bot, Color(0.8, 0.95, 1.0, alpha * 0.8), 1.5)
 
-	# Purple void glow behind everything
-	draw_line(s, e, Color(0.4, 0.0, 0.7, alpha * 0.12), lerp(30.0, 8.0, t))
-	draw_line(s, e, Color(0.4, 0.0, 0.7, alpha * 0.2), lerp(20.0, 5.0, t))
+	# Void glow behind everything, tinted to Daggers' color
+	draw_line(s, e, Color(color.r, color.g, color.b, alpha * 0.12), lerp(30.0, 8.0, t))
+	draw_line(s, e, Color(color.r, color.g, color.b, alpha * 0.2), lerp(20.0, 5.0, t))
 
 	# Sparks at impact points
 	for i in range(6):
