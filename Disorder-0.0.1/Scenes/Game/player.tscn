@@ -13,3 +13,7 @@ script = ExtResource("1_4flbx")
 shape = SubResource("CircleShape2D_sh265")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1722615643]
+
+[node name="CharacterSprite" type="Sprite2D" parent="." unique_id=463541803]
+texture_filter = 1
+scale = Vector2(0.45, 0.45)
