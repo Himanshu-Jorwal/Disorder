@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/crosshair_draw.gd" id="1_crosshair"]
+
+[node name="Crosshair" type="CanvasLayer"]
+layer = 100
+
+[node name="CrosshairDraw" type="Node2D" parent="."]
+script = ExtResource("1_crosshair")
