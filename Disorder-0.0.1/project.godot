@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 GameState="*uid://ddmclrxpbsxo5"
 Crosshair="*res://Scenes/UI/crosshair.tscn"
+AudioManager="*uid://c4b4kpjmq8bpo"
 
 [display]
 
