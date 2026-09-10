@@ -30,6 +30,8 @@ var sprite_facing_reversed = false
 var bob_timer = 0.0
 var daggers_trail_node = null
 var mirror_smooth = 1.0
+var footstep_timer = 0.0
+const FOOTSTEP_INTERVAL = 0.35
 var attack1_name = "Crossbow"
 var attack2_name = "Lance"
 var absolute_name = "Absolute1"
@@ -229,6 +231,14 @@ func _physics_process(delta):
 	velocity = direction * BASE_SPEED * speed_multiplier
 	move_and_slide()
 
+	if direction.length() > 0.01:
+		footstep_timer -= delta
+		if footstep_timer <= 0.0:
+			AudioManager.play_sfx("footstep", -6.0)
+			footstep_timer = FOOTSTEP_INTERVAL
+	else:
+		footstep_timer = 0.0
+
 	if has_sprite:
 		# Flip to face whichever side the mouse is on
 		var mouse_pos = get_global_mouse_position()
@@ -278,6 +288,7 @@ func _physics_process(delta):
 		if milano_charge_timer >= MILANO_CHARGE_TIME:
 			milano_charging = false
 			milano_beam_active = true
+			AudioManager.play_sfx("milano_absolute_fire")
 			milano_beam_timer = 0.0
 			var mouse_pos = get_global_mouse_position()
 			milano_beam_angle = (mouse_pos - global_position).angle()
@@ -336,6 +347,7 @@ func use_absolute():
 
 # --- ZAIRE ---
 func _zaire_crossbow():
+	AudioManager.play_sfx("zaire_crossbow")
 	var mouse_pos = get_global_mouse_position()
 	var base_dir = (mouse_pos - global_position).normalized()
 	var spread_angles = [-12.0, 0.0, 12.0]
@@ -344,11 +356,13 @@ func _zaire_crossbow():
 		_spawn_star_bullet(global_position, dir, 20, Color(0.85, 0.95, 1.0))
 
 func _zaire_lance():
+	AudioManager.play_sfx("zaire_lance")
 	var mouse_pos = get_global_mouse_position()
 	var dir = (mouse_pos - global_position).normalized()
 	_spawn_piercing_bullet(global_position, dir, 50, Color(0.6, 0.9, 1.0))
 
 func _zaire_absolute():
+	AudioManager.play_sfx("zaire_absolute")
 	for i in range(24):
 		var angle = TAU * i / 24
 		var dir = Vector2(cos(angle), sin(angle))
@@ -356,17 +370,20 @@ func _zaire_absolute():
 
 # --- DAGGERS ---
 func _daggers_shard():
+	AudioManager.play_sfx("daggers_shard")
 	var mouse_pos = get_global_mouse_position()
 	var dir = (mouse_pos - global_position).normalized()
 	_spawn_splitting_shard(global_position, dir, 20, Color(0.2, 0.9, 0.8))
 
 func _daggers_mirror():
+	AudioManager.play_sfx("daggers_mirror")
 	var clone = preload("res://Scenes/Game/daggers_shadow.tscn").instantiate()
 	clone.position = global_position
 	clone.player_ref = self
 	get_parent().add_child(clone)
 
 func _daggers_absolute():
+	AudioManager.play_sfx("daggers_absolute")
 	var mouse_pos = get_global_mouse_position()
 	var dir = (mouse_pos - global_position).normalized()
 	var start_pos = global_position
@@ -406,17 +423,20 @@ func _daggers_absolute():
 
 # --- MILANO ---
 func _milano_chime():
+	AudioManager.play_sfx("milano_chime")
 	var mouse_pos = get_global_mouse_position()
 	var dir = (mouse_pos - global_position).normalized()
 	_spawn_heavy_bullet(global_position, dir, 50, Color(1.0, 0.6, 0.1))
 
 func _milano_rift():
+	AudioManager.play_sfx("milano_rift")
 	var mouse_pos = get_global_mouse_position()
 	_spawn_rift(mouse_pos)
 
 func _milano_absolute():
 	if milano_charging or milano_beam_active:
 		return
+	AudioManager.play_sfx("milano_absolute_charge")
 	milano_charging = true
 	milano_charge_timer = 0.0
 
@@ -476,6 +496,7 @@ func take_damage(amount):
 	if is_invincible:
 		return
 	hp -= amount
+	AudioManager.play_sfx("player_hurt")
 	is_invincible = true
 	invincibility_timer = INVINCIBILITY_DURATION
 	flash_timer = FLASH_RATE
@@ -484,6 +505,7 @@ func take_damage(amount):
 		die()
 
 func die():
+	AudioManager.play_sfx("player_death")
 	get_tree().paused = true
 	var game_over = get_parent().get_node("GameOver")
 	game_over.show_game_over(score)
@@ -494,6 +516,7 @@ func gain_xp(amount):
 		level_up()
 
 func level_up():
+	AudioManager.play_sfx("level_up")
 	level += 1
 	xp = 0
 	xp_to_next_level = int(xp_to_next_level * 1.4)
