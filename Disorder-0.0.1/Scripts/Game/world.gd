@@ -88,6 +88,7 @@ func spawn_enemy():
 	add_child(enemy)
 
 func _on_phase_changed(phase):
+	AudioManager.play_sfx("moon_phase")
 	current_phase = phase
 	apply_phase_effects(phase)
 	hud.update_moon(moon.get_phase_name())
@@ -123,6 +124,7 @@ func update_existing_enemies(phase):
 		enemy.apply_phase(phase)
 
 func _spawn_graven():
+	AudioManager.play_sfx("graven_spawn")
 	var graven = GRAVEN_SCENE.instantiate()
 	var angle = randf() * TAU
 	var spawn_pos = player.global_position + Vector2(cos(angle), sin(angle)) * 400.0
@@ -135,6 +137,7 @@ func _spawn_graven():
 	add_child(graven)
 
 func _spawn_malakar():
+	AudioManager.play_sfx("malakar_spawn")
 	var malakar = MALAKAR_SCENE.instantiate()
 	var angle = randf() * TAU
 	var spawn_pos = player.global_position + Vector2(cos(angle), sin(angle)) * 400.0
@@ -152,6 +155,8 @@ func _on_cycle_completed(cycle_number):
 		_spawn_lilith()
 
 func _spawn_lilith():
+	AudioManager.play_sfx("lilith_spawn")
+	AudioManager.play_music("lilith_theme")
 	boss_active = true
 	spawn_timer = 0.0
 	spawn_interval = 9999.0
@@ -167,6 +172,7 @@ func _spawn_lilith():
 	add_child(lilith)
 
 func lilith_defeated():
+	AudioManager.stop_music()
 	boss_active = false
 	spawn_interval = base_spawn_interval
 	moon.paused = false
