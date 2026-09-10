@@ -141,8 +141,8 @@ func _draw_lilith_body(scale, col, pulse, fast_pulse):
 		var font = ThemeDB.fallback_font
 		var name_text = "LILITH"
 		var name_size = font.get_string_size(name_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16)
-		draw_string(font, Vector2(-name_size.x / 2 + 1, -115), name_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0, 0, 0, 0.9))
-		draw_string(font, Vector2(-name_size.x / 2, -116), name_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(col.r + 0.3, col.g + 0.2, col.b + 0.1, 1.0))
+		draw_string(font, Vector2(-name_size.x / 2 + 1, -139), name_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0, 0, 0, 0.9))
+		draw_string(font, Vector2(-name_size.x / 2, -140), name_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(col.r + 0.3, col.g + 0.2, col.b + 0.1, 1.0))
 
 func _draw_phase1_effects(pulse, fast_pulse):
 	# Summoning circles orbiting
