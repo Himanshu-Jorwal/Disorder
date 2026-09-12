@@ -34,6 +34,34 @@ var name_abs = "Absolute"
 
 var heart_texture = preload("res://Assets/HUD/Heart.png")
 
+const ABILITY_ICONS = {
+	"Crossbow": "res://Assets/HUD/AbilityIcons/zaire_crossbow.png",
+	"Lance": "res://Assets/HUD/AbilityIcons/zaire_lance.png",
+	"Absolute1": "res://Assets/HUD/AbilityIcons/zaire_absolute.png",
+	"Shard": "res://Assets/HUD/AbilityIcons/daggers_shard.png",
+	"Mirror": "res://Assets/HUD/AbilityIcons/daggers_mirror.png",
+	"Absolute2": "res://Assets/HUD/AbilityIcons/daggers_absolute.png",
+	"Chime": "res://Assets/HUD/AbilityIcons/milano_chime.png",
+	"Rift": "res://Assets/HUD/AbilityIcons/milano_rift.png",
+	"Absolute3": "res://Assets/HUD/AbilityIcons/milano_absolute.png",
+}
+
+var ability_sprites = []
+var ability_overlays = []
+
+func _ready():
+	for i in range(3):
+		var sprite = Sprite2D.new()
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		add_child(sprite)
+		ability_sprites.append(sprite)
+
+	for i in range(3):
+		var overlay = Node2D.new()
+		overlay.set_script(load("res://Scripts/UI/ability_overlay_draw.gd"))
+		add_child(overlay)
+		ability_overlays.append(overlay)
+
 func _draw():
 	var screen = get_viewport().get_visible_rect().size
 	var font = ThemeDB.fallback_font
@@ -117,14 +145,30 @@ func _draw():
 		draw_rect(Rect2(sx - 1, sy - 1, SLOT_SIZE + 2, SLOT_SIZE + 2), Color(0, 0, 0, 0.8))
 		draw_rect(Rect2(sx, sy, SLOT_SIZE, SLOT_SIZE), Color(0.06, 0.04, 0.1, 1.0))
 
-		# Icon placeholder
-		var icon_col = col if is_ready else Color(col.r * 0.3, col.g * 0.3, col.b * 0.3, 1.0)
-		draw_rect(Rect2(sx + 4, sy + 4, SLOT_SIZE - 8, SLOT_SIZE - 8), icon_col)
+		# Ability icon
+		var sprite = ability_sprites[i]
+		var icon_path = ABILITY_ICONS.get(ability_name, "")
+		if icon_path != "" and ResourceLoader.exists(icon_path):
+			var tex = load(icon_path)
+			sprite.texture = tex
+			var tex_size = tex.get_size()
+			var max_dim = max(tex_size.x, tex_size.y)
+			var icon_area = SLOT_SIZE - 12
+			var s = icon_area / max_dim if max_dim > 0 else 1.0
+			sprite.scale = Vector2(s, s)
+			sprite.position = Vector2(sx + SLOT_SIZE / 2, sy + SLOT_SIZE / 2)
+			sprite.modulate = Color(1, 1, 1, 1) if is_ready else Color(0.4, 0.4, 0.4, 1)
+			sprite.visible = true
+		else:
+			sprite.visible = false
 
-		# Cooldown overlay
-		if not is_ready:
-			var overlay_height = (SLOT_SIZE - 8) * cd_progress
-			draw_rect(Rect2(sx + 4, sy + 4, SLOT_SIZE - 8, overlay_height), Color(0.0, 0.0, 0.0, 0.7))
+		# Cooldown overlay + countdown text (child node, renders above the icon)
+		var overlay = ability_overlays[i]
+		overlay.position = Vector2(sx + 4, sy + 4)
+		overlay.overlay_width = SLOT_SIZE - 8
+		overlay.overlay_height = (SLOT_SIZE - 8) * cd_progress if not is_ready else 0.0
+		overlay.cd_text = ("%.1f" % cooldown) if not is_ready else ""
+		overlay.queue_redraw()
 
 		# Border
 		var border_col = Color(col.r, col.g, col.b, 0.9) if is_ready else Color(col.r * 0.4, col.g * 0.4, col.b * 0.4, 0.5)
@@ -146,13 +190,6 @@ func _draw():
 		var key_x = sx + SLOT_SIZE / 2 - key_size.x / 2
 		draw_string(font, Vector2(key_x + 1, sy + SLOT_SIZE + 27), key_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0, 0, 0, 0.9))
 		draw_string(font, Vector2(key_x, sy + SLOT_SIZE + 26), key_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.55, 0.55, 0.55, 0.8))
-
-		# Cooldown timer
-		if not is_ready:
-			var cd_text = "%.1f" % cooldown
-			var cd_size = font.get_string_size(cd_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 14)
-			draw_string(font, Vector2(sx + SLOT_SIZE / 2 - cd_size.x / 2 + 1, sy + SLOT_SIZE / 2 + 6), cd_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0, 0, 0, 0.9))
-			draw_string(font, Vector2(sx + SLOT_SIZE / 2 - cd_size.x / 2, sy + SLOT_SIZE / 2 + 5), cd_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(1, 1, 1, 0.9))
 
 func update_stats(hp, max_hp_val, xp, xp_to_next, level, a1_cd, a1_max, a2_cd, a2_max, abs_cd, abs_max, a1_name, a2_name, abs_name):
 	current_hp = hp
