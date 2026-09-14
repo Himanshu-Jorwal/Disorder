@@ -6,21 +6,21 @@ var character_data = [
 		"name": "Zaire",
 		"attack1": "Crossbow",
 		"attack2": "Lance",
-		"absolute": "Absolute1",
+		"absolute": "Indra's Verdict",
 		"color": Color(0.6, 0.3, 1.0)
 	},
 	{
 		"name": "Daggers",
 		"attack1": "Shard",
 		"attack2": "Mirror",
-		"absolute": "Absolute2",
+		"absolute": "Kamikaze",
 		"color": Color(0.2, 0.8, 0.7)
 	},
 	{
 		"name": "Milano",
 		"attack1": "Chime",
 		"attack2": "Rift",
-		"absolute": "Absolute3",
+		"absolute": "La Pena\nDe Muerte",
 		"color": Color(1.0, 0.5, 0.1)
 	}
 ]
