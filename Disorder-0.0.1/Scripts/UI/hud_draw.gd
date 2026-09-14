@@ -30,20 +30,20 @@ var cd_abs = 0.0
 var max_cd_abs = 30.0
 var name1 = "Ability 1"
 var name2 = "Ability 2"
-var name_abs = "Absolute"
+var name_abs = "Indra's Verdict"
 
 var heart_texture = preload("res://Assets/HUD/Heart.png")
 
 const ABILITY_ICONS = {
 	"Crossbow": "res://Assets/HUD/AbilityIcons/zaire_crossbow.png",
 	"Lance": "res://Assets/HUD/AbilityIcons/zaire_lance.png",
-	"Absolute1": "res://Assets/HUD/AbilityIcons/zaire_absolute.png",
+	"Indra's Verdict": "res://Assets/HUD/AbilityIcons/zaire_absolute.png",
 	"Shard": "res://Assets/HUD/AbilityIcons/daggers_shard.png",
 	"Mirror": "res://Assets/HUD/AbilityIcons/daggers_mirror.png",
-	"Absolute2": "res://Assets/HUD/AbilityIcons/daggers_absolute.png",
+	"Kamikaze": "res://Assets/HUD/AbilityIcons/daggers_absolute.png",
 	"Chime": "res://Assets/HUD/AbilityIcons/milano_chime.png",
 	"Rift": "res://Assets/HUD/AbilityIcons/milano_rift.png",
-	"Absolute3": "res://Assets/HUD/AbilityIcons/milano_absolute.png",
+	"La Pena\nDe Muerte": "res://Assets/HUD/AbilityIcons/milano_absolute.png",
 }
 
 var ability_sprites = []
@@ -178,18 +178,24 @@ func _draw():
 		if is_ready:
 			draw_rect(Rect2(sx - 2, sy - 2, SLOT_SIZE + 4, SLOT_SIZE + 4), Color(col.r, col.g, col.b, 0.2), false, 2.0)
 
-		# Ability name below slot
-		var name_size = font.get_string_size(ability_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11)
-		var name_x = sx + SLOT_SIZE / 2 - name_size.x / 2
-		draw_string(font, Vector2(name_x + 1, sy + SLOT_SIZE + 14), ability_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0, 0, 0, 0.9))
-		draw_string(font, Vector2(name_x, sy + SLOT_SIZE + 13), ability_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, col if is_ready else Color(col.r * 0.5, col.g * 0.5, col.b * 0.5, 0.8))
+		# Ability name below slot - supports multi-line names split on "\n"
+		var name_lines = ability_name.split("\n")
+		var line_height = 12
+		for j in range(name_lines.size()):
+			var line = name_lines[j]
+			var line_size = font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 11)
+			var line_x = sx + SLOT_SIZE / 2 - line_size.x / 2
+			var line_y = sy + SLOT_SIZE + 13 + j * line_height
+			draw_string(font, Vector2(line_x + 1, line_y + 1), line, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0, 0, 0, 0.9))
+			draw_string(font, Vector2(line_x, line_y), line, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, col if is_ready else Color(col.r * 0.5, col.g * 0.5, col.b * 0.5, 0.8))
 
-		# Key label in brackets below ability name
+		# Key label in brackets below ability name - shifts down if the name used a second line
+		var extra_line_offset = (name_lines.size() - 1) * line_height
 		var key_text = "(" + key + ")"
 		var key_size = font.get_string_size(key_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 10)
 		var key_x = sx + SLOT_SIZE / 2 - key_size.x / 2
-		draw_string(font, Vector2(key_x + 1, sy + SLOT_SIZE + 27), key_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0, 0, 0, 0.9))
-		draw_string(font, Vector2(key_x, sy + SLOT_SIZE + 26), key_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.55, 0.55, 0.55, 0.8))
+		draw_string(font, Vector2(key_x + 1, sy + SLOT_SIZE + 27 + extra_line_offset), key_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0, 0, 0, 0.9))
+		draw_string(font, Vector2(key_x, sy + SLOT_SIZE + 26 + extra_line_offset), key_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.55, 0.55, 0.55, 0.8))
 
 func update_stats(hp, max_hp_val, xp, xp_to_next, level, a1_cd, a1_max, a2_cd, a2_max, abs_cd, abs_max, a1_name, a2_name, abs_name):
 	current_hp = hp
