@@ -34,7 +34,7 @@ var footstep_timer = 0.0
 const FOOTSTEP_INTERVAL = 0.35
 var attack1_name = "Crossbow"
 var attack2_name = "Lance"
-var absolute_name = "Absolute1"
+var absolute_name = "Indra's Verdict"
 
 var attack1_cooldown = 0.0
 var attack2_cooldown = 0.0
