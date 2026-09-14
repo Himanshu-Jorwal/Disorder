@@ -9,7 +9,7 @@ var characters = [
 		"gender": "Female",
 		"attack1": "Crossbow",
 		"attack2": "Lance",
-		"absolute": "Absolute1",
+		"absolute": "Indra's Verdict",
 		"attack1_desc": "Fires a spread of bolts",
 		"attack2_desc": "Piercing lance through enemies",
 		"absolute_desc": "Bolts explode outward in all directions",
@@ -20,10 +20,10 @@ var characters = [
 		"gender": "Female",
 		"attack1": "Shard",
 		"attack2": "Mirror",
-		"absolute": "Absolute2",
+		"absolute": "Kamikaze",
 		"attack1_desc": "Fast shard that shatters on impact",
-		"attack2_desc": "Fires shards in all directions",
-		"absolute_desc": "Orbiting blades around player",
+		"attack2_desc": "Clone that attracts enemies and explodes",
+		"absolute_desc": "Long Dash",
 		"color": Color(0.2, 0.8, 0.7)
 	},
 	{
@@ -31,10 +31,10 @@ var characters = [
 		"gender": "Female",
 		"attack1": "Chime",
 		"attack2": "Rift",
-		"absolute": "Absolute3",
-		"attack1_desc": "Slow resonating orb, area damage",
+		"absolute": "La Pena De Muerte",
+		"attack1_desc": "Slow resonating orb, heavy damage",
 		"attack2_desc": "Pulls nearby enemies toward a rift",
-		"absolute_desc": "Massive beam sweeps across screen",
+		"absolute_desc": "Laser",
 		"color": Color(1.0, 0.5, 0.1)
 	}
 ]
